@@ -16,7 +16,6 @@ jobs:
     env:
       GRADIO_ANALYTICS_ENABLED: 'False'
       NO_PROXY: localhost,127.0.0.1
-      no_proxy: localhost,127.0.0.1
       PYTHONDONTWRITEBYTECODE: '1'
     steps:
       - uses: actions/checkout@v4
@@ -47,3 +46,4 @@ jobs:
           name: test-evidence-python-${{ matrix.python-version }}
           path: test-results.xml
           retention-days: 7
+
