@@ -43,6 +43,9 @@ def source_files(root=ROOT):
     files += sorted((root / "tests").glob("*.py"))
     files += sorted((root / "docs").glob("*.md"))
     files += sorted((root / "tools").glob("*.py"))
+    files += sorted((root / "examples").glob("*.json"))
+    files += sorted((root / "examples").glob("*.txt"))
+    files += sorted((root / "examples").glob("*.md"))
     return sorted(set(files))
 
 

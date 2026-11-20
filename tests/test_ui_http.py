@@ -166,7 +166,7 @@ def test_editor_input_invalidates_old_bundle():
 def test_generation_controls_lock_and_unlock():
     locked = app.set_writing_interactive(False)
     unlocked = app.set_writing_interactive(True)
-    assert len(locked) == len(unlocked) == 10
+    assert len(locked) == len(unlocked) == 11
     assert all(value["interactive"] is False for value in locked)
     assert all(value["interactive"] is True for value in unlocked)
 
@@ -294,3 +294,18 @@ def test_writing_actions_reject_while_generation_is_locked(action, args):
     values = app.unlock_writing()
     assert values[0] is False
     assert all(v["interactive"] for v in values[1:])
+
+
+def test_sample_draft_respects_writing_lock_and_loads_over_http(running_app):
+    import gradio as gr
+
+    with pytest.raises(gr.Error, match="锁定"):
+        app.load_sample_draft(True)
+    _, url, _ = running_app
+    client = Client(url, verbose=False)
+    result = client.predict(api_name="/load_sample_draft")
+    assert "合成示例" in result[1]
+    assert "虚构演示稿" in result[2]
+    metrics = client.predict(api_name="/analyze_sample")
+    assert "1500" in metrics[0]
+    assert "185" in metrics[0]

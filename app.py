@@ -93,7 +93,7 @@ def _raise_ui_error(exc):
     raise gr.Error("操作失败；当前稿件未改动。请检查配置或开始新稿后重试。") from None
 
 
-WRITING_CONTROL_COUNT = 10
+WRITING_CONTROL_COUNT = 11
 
 
 def set_writing_interactive(enabled):
@@ -126,6 +126,14 @@ def clear_session_guarded(writing_locked):
     if writing_locked:
         raise gr.Error("正在生成中，新稿已锁定。")
     return clear_session()
+
+
+def load_sample_draft(writing_locked):
+    return restore_note_guarded(writing_locked, str(ROOT / "examples" / "draft.synthetic.json"))
+
+
+def analyze_sample():
+    return analyze(str(ROOT / "example-metrics.csv"))
 
 
 def validate_config_ui(config_text, mode):
@@ -314,6 +322,7 @@ def build_app():
                     with gr.Row():
                         button = gr.Button("生成 / 基于当前稿修改", variant="primary")
                         clear = gr.Button("开始新稿（清空）")
+                    sample_draft = gr.Button("载入示例草稿（替换当前稿）")
                     status = gr.Textbox(
                         value="离线演示就绪。未调用真实模型，未发布。",
                         label="操作状态",
@@ -369,6 +378,7 @@ def build_app():
                     interactive=False,
                 )
             analyze_button = gr.Button("分析 CSV", variant="primary")
+            sample_metrics = gr.Button("查看示例复盘（合成数据）")
             summary = gr.Markdown()
             ranked = gr.Dataframe(
                 headers=RANK_HEADERS,
@@ -402,7 +412,16 @@ def build_app():
             bundle,
         ]
         write_options = {"concurrency_id": "writing", "concurrency_limit": 4}
-        protected_controls = [message, *editor, button, clear, export, restore_button, mode]
+        protected_controls = [
+            message,
+            *editor,
+            button,
+            clear,
+            export,
+            restore_button,
+            mode,
+            sample_draft,
+        ]
         protected_outputs = [writing_locked, *protected_controls]
         start_generation = button.click(
             lock_writing,
@@ -441,6 +460,20 @@ def build_app():
             [bundle, status],
             api_name="export_bundle",
             **write_options,
+        )
+        sample_draft.click(
+            load_sample_draft,
+            writing_locked,
+            write_outputs,
+            api_name="load_sample_draft",
+            **write_options,
+        )
+        sample_metrics.click(
+            analyze_sample,
+            outputs=[report_state, summary, result, ranked, metrics_file],
+            api_name="analyze_sample",
+            concurrency_id="metrics",
+            concurrency_limit=1,
         )
         restore_button.click(
             restore_note_guarded,

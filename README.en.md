@@ -215,3 +215,7 @@ CI config: `.github/workflows/ci.yml`.
 ## License
 
 MIT, see `LICENSE`.
+
+## Included samples
+
+See [sample data and attribution](examples/README.md) for ready-to-use inputs, offline previews, licenses, and limitations. No API credentials are included.

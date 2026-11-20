@@ -140,3 +140,7 @@ NO_PROXY=localhost,127.0.0.1 no_proxy=localhost,127.0.0.1 .venv/bin/python -m py
 ## 许可证
 
 [MIT License](LICENSE)。模型服务和小红书账号服务仍遵守各自服务条款；本项目不提供 API 凭据或代替用户完成平台授权。
+
+## 内置测试数据
+
+见 [示例数据与来源说明](examples/README.md)：包含可以直接试用的输入、离线预览方式、许可证与限制，不附带 API 密钥。
