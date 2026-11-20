@@ -1,0 +1,5 @@
+{
+  "name": "Demo mode",
+  "mode": "demo",
+  "description": "不调用真实模型，只用于本地验收界面与流程。"
+}

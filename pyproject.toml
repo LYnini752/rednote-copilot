@@ -1,0 +1,23 @@
+[project]
+name = "rednote-copilot"
+version = "0.1.0a1"
+description = "Local writing, draft export, and CSV review assistant"
+requires-python = ">=3.11,<3.14"
+license = "MIT"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers"
+filterwarnings = [
+    # Gradio 5 announces 6.0 API changes; alpha intentionally pins 5.50.0.
+    "ignore:.*Gradio 6.0.*:DeprecationWarning",
+    "ignore:'HTTP_422_UNPROCESSABLE_ENTITY' is deprecated.*:DeprecationWarning",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = [".verify-venv", "evidence"]
+
+[tool.ruff.lint]
+select = ["E9", "F", "I"]

@@ -1,0 +1,3 @@
+# Runtime (tested alpha version)
+-c constraints.txt
+gradio==5.50.0
